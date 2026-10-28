@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-labelledby="title desc">
+  <title id="title">Градописец — иконка</title>
+  <desc id="desc">Круглый тёмно-зелёный план города с извилистой рекой и светлым геометрическим силуэтом зданий и дороги.</desc>
+  <defs>
+    <radialGradient id="ground" cx="75%" cy="18%" r="106%">
+      <stop offset="0" stop-color="#234d45"/>
+      <stop offset="0.42" stop-color="#10362f"/>
+      <stop offset="0.81" stop-color="#082925"/>
+      <stop offset="1" stop-color="#051e1c"/>
+    </radialGradient>
+    <linearGradient id="river" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#315b52"/>
+      <stop offset="0.5" stop-color="#27544b"/>
+      <stop offset="1" stop-color="#183f3a"/>
+    </linearGradient>
+    <linearGradient id="ivory" x1="0" y1="0" x2="0.85" y2="1">
+      <stop offset="0" stop-color="#fff9e9"/>
+      <stop offset="0.55" stop-color="#f5ead5"/>
+      <stop offset="1" stop-color="#e5d6ba"/>
+    </linearGradient>
+    <clipPath id="round">
+      <circle cx="512" cy="512" r="504"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#round)">
+    <!-- Circular background; nothing outside the disc is drawn. -->
+    <circle cx="512" cy="512" r="504" fill="url(#ground)"/>
+    <!-- City street plan, rendered as subdued lines behind the skyline. -->
+    <g fill="none" stroke="#8ba69b" stroke-opacity="0.205" stroke-width="9" stroke-linecap="square" stroke-linejoin="round">
+      <path d="M-50 45 188 170 334 211 470 116 638 63 786 18 1038 91"/>
+      <path d="M-30 227 130 287 260 335 417 357 565 400 680 461 832 500 1037 595"/>
+      <path d="M-44 381 134 344 236 357 342 441 471 453 636 530 807 609 1068 660"/>
+      <path d="M-24 576 142 521 276 499 410 583 575 630 720 712 902 774 1045 815"/>
+      <path d="M-80 750 107 671 223 627 390 716 540 761 699 818 851 916 1015 981"/>
+      <path d="M-6 929 189 806 281 857 416 917 511 1029"/>
+      <path d="M102 -30 208 158 151 283 101 383 73 503 156 652 208 817"/>
+      <path d="M293 -47 259 112 336 214 297 352 256 480 240 629 278 869 304 1074"/>
+      <path d="M493 -47 447 91 466 199 409 351 421 505 381 633 465 812 454 1034"/>
+      <path d="M669 -43 672 125 636 271 686 386 628 525 670 667 623 815 675 1066"/>
+      <path d="M859 -25 835 123 745 224 793 365 747 493 824 592 830 769 931 977"/>
+      <path d="M1038 208 925 184 859 272 947 335 1022 367"/>
+      <path d="M1010 436 887 425 829 482 951 539 1027 579"/>
+      <path d="M-26 120 132 183 195 104 314 182"/>
+      <path d="M-31 485 96 466 169 572 263 550"/>
+      <path d="M63 1023 148 929 225 972 288 939"/>
+      <path d="M543 1034 556 914 678 898 754 981"/>
+      <path d="M771 1033 821 924 939 909 1030 852"/>
+    </g>
+    <g fill="none" stroke="#041e1c" stroke-opacity="0.38" stroke-width="6" stroke-linecap="round">
+      <path d="M-50 212 130 289 261 331 411 355"/>
+      <path d="M34 834 162 755 267 841 365 953"/>
+      <path d="M547 780 641 730 753 799 864 887"/>
+      <path d="M750 -50 739 88 697 167"/>
+    </g>
+    <!-- The sinuous river cutting down the right side of the map. -->
+    <path d="M728 -40 C731 72 649 115 653 194 C657 251 726 282 765 323 C797 360 783 410 752 449 C714 500 741 553 805 578 C863 602 905 643 890 705 C871 772 892 826 958 842 C1005 854 1047 827 1090 799 L1100 537 C1054 537 1005 547 981 504 C963 472 977 420 991 372 C1012 300 972 258 918 215 C858 167 842 128 882 56 L917 -40 Z" fill="url(#river)" opacity="0.90"/>
+    <path d="M727 -33 C727 80 642 119 646 197 C650 259 723 286 759 325 C790 362 777 412 746 454 C705 508 739 558 805 586 C863 612 902 643 884 706 C863 771 891 839 958 849" fill="none" stroke="#061f1e" stroke-width="6" opacity="0.68"/>
+    <path d="M919 -31 C875 67 850 124 917 208 C970 255 1014 305 991 371 C974 430 959 472 982 507" fill="none" stroke="#47756a" stroke-opacity="0.25" stroke-width="7"/>
+    <!-- Faint secondary map strokes laid over the river-adjacent area. -->
+    <g fill="none" stroke="#a0b7aa" stroke-width="7" stroke-opacity="0.20">
+      <path d="M830 377 892 312 980 371"/>
+      <path d="M803 462 877 475 947 541"/>
+      <path d="M852 875 925 915 1038 875"/>
+    </g>
+    <!-- City skyline forming a compact geometric brand mark. -->
+    <g fill="url(#ivory)">
+      <!-- Low building at left -->
+      <path d="M80 751 H202 V532 L366 449 V751 H390 V779 H80 A9 9 0 0 1 71 770 V760 A9 9 0 0 1 80 751 Z"/>
+      <!-- Angled middle building; a substantial negative-space gap remains below -->
+      <path d="M321 395 495 296 V686 L553 690 V764 L406 755 V444 L321 500 Z"/>
+      <!-- Central tall tower -->
+      <path d="M524 180 665 280 V695 L565 687 V394 L524 363 Z"/>
+      <!-- Right building -->
+      <path d="M700 419 845 524 V751 H960 A10 10 0 0 1 970 761 V769 A10 10 0 0 1 960 779 H805 V571 L776 550 V714 L700 705 Z"/>
+    </g>
+    <!-- Road ribbons overlap the building bases and curve toward the viewer. -->
+    <path d="M410 728 C535 740 689 750 752 794 C794 825 780 854 740 878 C674 920 580 937 473 967 C368 996 298 1034 253 1091 L185 1068 C231 984 310 943 430 910 C545 878 651 855 696 830 C718 817 700 808 665 801 C583 785 488 782 410 784 Z" fill="#031f1e" opacity="0.42" transform="translate(6 11)"/>
+    <path d="M395 734 C543 740 691 762 748 795 C783 816 782 847 746 873 C680 921 570 944 471 972 C363 1002 292 1041 241 1102 L177 1080 C229 991 302 952 424 914 C542 880 655 855 701 831 C725 819 708 807 666 797 C592 779 499 777 395 778 Z" fill="url(#ivory)"/>
+  </g>
+</svg>
