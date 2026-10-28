@@ -47,6 +47,9 @@ export function groupStreets(streets) {
         best.forEach((j, i) => {
             if (j < 0 || best[j] !== i) return;
             const a = rays[i].road, b = rays[j].road;
+            // A route passing through this junction already has its continuation.
+            if (root(a) !== root(b) && [root(a), root(b)].some(group =>
+                rays.filter(ray => root(ray.road) === group).length > 1)) return;
             // Wall circuits are independent routes even when an alley meets them tangentially.
             if (a !== b && /^(outer-)?wall-/.test(streets[a].id) !== /^(outer-)?wall-/.test(streets[b].id)) return;
             join(a, b);

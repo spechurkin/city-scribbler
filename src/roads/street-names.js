@@ -1,7 +1,7 @@
 import {hashSeed} from '../core/random.js';
 import {groupStreets} from './street-groups.js';
+import {streetNamePool} from './street-name-pool.js';
 
-const subjects = ['Кузнецов', 'Гончаров', 'Ткачей', 'Пекарей', 'Сапожников', 'Плотников', 'Каменщиков', 'Садоводов', 'Рыбаков', 'Охотников', 'Купцов', 'Мельников', 'Красильщиков', 'Ювелиров', 'Стекольщиков', 'Бондарей', 'Фонарей', 'Колодцев', 'Ворот', 'Башен', 'Садов', 'Мостов', 'Вязов', 'Лип', 'Дубов', 'Ив', 'Клёнов', 'Сосен', 'Ясеней', 'Роз', 'Лилий', 'Ирисов'];
 const named = new WeakMap();
 
 export function ensureStreetNames(city) {
@@ -9,18 +9,26 @@ export function ensureStreetNames(city) {
     groupStreets(city.streets);
     const names = new Map(), counters = new Map(),
         used = new Set(city.streets.map(r => r.name).filter(n => typeof n === 'string' && n));
+    const available = new Set(streetNamePool.filter(name => !used.has(name)));
     for (const road of city.streets) if (typeof road.name === 'string' && road.name && !names.has(road.streetId)) names.set(road.streetId, road.name);
     for (const road of city.streets) {
         const id = road.streetId;
         if (!names.has(id)) {
             const hash = hashSeed(`${city.options?.seed}:street:${id}`);
-            const subject = subjects[hash % subjects.length];
-            let number = counters.get(subject) || 1, name;
-            do {
-                name = number === 1 ? `Улица ${subject}` : `${number}-я улица ${subject}`;
-                number++;
-            } while (used.has(name));
-            counters.set(subject, number);
+            let index = hash % streetNamePool.length, name;
+            if (available.size) {
+                while (!available.has(streetNamePool[index])) index = (index + 1) % streetNamePool.length;
+                name = streetNamePool[index];
+                available.delete(name);
+            } else {
+                const base = streetNamePool[index];
+                let number = counters.get(base) || 2;
+                do {
+                    name = `${number}-я ${base[0].toLowerCase()}${base.slice(1)}`;
+                    number++;
+                } while (used.has(name));
+                counters.set(base, number);
+            }
             names.set(id, name);
             used.add(name);
         }

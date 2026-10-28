@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {ensureStreetNames, renameStreet} from '../src/roads/street-names.js';
+import {streetNamePool} from '../src/roads/street-name-pool.js';
 import {generateCity} from '../src/generation/interactive-city.js';
 import {generateCity as generateLegacy} from '../src/generation/generator.js';
 import {parseProject, serializeProject} from '../src/io/city-project.js';
@@ -15,13 +16,62 @@ test('street names are stable, unique per road id and shared by split pieces', (
     ensureStreetNames(copy);
     assert.deepEqual(city, copy);
     assert.equal(new Set(city.streets.map(r => r.name)).size, 2000);
-    assert.ok(city.streets.every(r => /^(?:Улица|\d+-я улица) \S+$/.test(r.name)));
-    assert.ok(city.streets.some(r => r.name.startsWith('2-я улица ')));
-    assert.ok(city.streets.some(r => r.name.startsWith('3-я улица ')));
+    assert.ok(city.streets.every(r => streetNamePool.includes(r.name)));
+    assert.ok(city.streets.some(r => r.name.endsWith(' улица')));
+    assert.ok(city.streets.some(r => /^Улица \S+ \S+$/.test(r.name)));
     renameStreet(city, 'road-0', 'Улица мастеров');
     ensureStreetNames(city);
     assert.equal(city.streets[0].name, city.streets.at(-1).name);
     assert.equal(city.streets[0].name, 'Улица мастеров');
+});
+
+test('the expanded pool has thousands of distinct Russian names with matching genders', () => {
+    assert.ok(streetNamePool.length >= 6000);
+    assert.equal(new Set(streetNamePool).size, streetNamePool.length);
+    assert.ok(streetNamePool.every(name => name.length <= 80 && !/[a-z\d]/i.test(name)));
+    for (const name of ['Улица Кузнецов', 'Кузнечная улица', 'Улица Серебряного ключа',
+        'Улица Серебряной розы', 'Улица Серебряного кольца', 'Улица Спящего дракона']) {
+        assert.ok(streetNamePool.includes(name), name);
+    }
+});
+
+test('saved names are reserved and numbering starts only after the entire pool is exhausted', () => {
+    const city = {
+        options: {seed: 'exhausted-names'},
+        streets: streetNamePool.map((name, i) => ({id: `saved-${i}`, name}))
+    };
+    const probe = structuredClone(city);
+    probe.streets.push({id: 'new-0'});
+    ensureStreetNames(probe);
+    const numbered = probe.streets.at(-1).name;
+    city.streets.push({id: 'custom', name: numbered});
+    city.streets.push(...Array.from({length: 100}, (_, i) => ({id: `new-${i}`})));
+    ensureStreetNames(city);
+    assert.deepEqual(city.streets.slice(0, streetNamePool.length).map(r => r.name), streetNamePool);
+    assert.equal(city.streets[streetNamePool.length].name, numbered);
+    assert.equal(new Set(city.streets.map(r => r.name)).size, city.streets.length);
+    assert.ok(city.streets.at(-100).name.startsWith('3-я '));
+    assert.ok(city.streets.slice(-100).every(r => /^\d+-я /.test(r.name)));
+});
+
+test('a city can use every base name before falling back to numbered names', () => {
+    const city = {
+        options: {seed: 'full-name-pool'},
+        streets: Array.from({length: streetNamePool.length + 2}, (_, i) => ({id: `road-${i}`}))
+    };
+    ensureStreetNames(city);
+    assert.deepEqual(new Set(city.streets.slice(0, -2).map(r => r.name)), new Set(streetNamePool));
+    assert.ok(city.streets.slice(-2).every(r => r.name.startsWith('2-я ')));
+    assert.equal(new Set(city.streets.map(r => r.name)).size, city.streets.length);
+});
+
+test('different seeds produce different street names', () => {
+    const streets = Array.from({length: 50}, (_, i) => ({id: `road-${i}`}));
+    const first = {options: {seed: 'first'}, streets: structuredClone(streets)};
+    const second = {options: {seed: 'second'}, streets: structuredClone(streets)};
+    ensureStreetNames(first);
+    ensureStreetNames(second);
+    assert.notDeepEqual(first.streets.map(r => r.name), second.streets.map(r => r.name));
 });
 
 test('straight continuations share selection and renaming across junctions, but branches do not', () => {
